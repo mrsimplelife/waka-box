@@ -15,6 +15,7 @@ const octokit = new Octokit({ auth: `token ${githubToken}` });
 async function main() {
   const stats = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
   await updateGist(stats);
+  console.log("done!");
 }
 
 async function updateGist(stats) {
@@ -29,7 +30,6 @@ async function updateGist(stats) {
   for (let i = 0; i < Math.min(stats.data.languages.length, 5); i++) {
     const data = stats.data.languages[i];
     const { name, percent, text: time } = data;
-
     const line = [
       name.padEnd(11),
       time.padEnd(14),
@@ -49,7 +49,7 @@ async function updateGist(stats) {
       gist_id: gistId,
       files: {
         [filename]: {
-          filename: `📊 Weekly development breakdown`,
+          filename: `📊 이번주에 가장 많이 사용한 언어 ${stats.data.languages[0].name}`,
           content: lines.join("\n")
         }
       }
